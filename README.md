@@ -7,7 +7,7 @@ This code was ported from the AVR-Crypto-Lib (http://www.das-labor.org/wiki/AVR-
 To install the library, download and copy the files into a subfolder (e.g. "DES") in the 
 "libraries" folder of your Arduino development environment.
 
-The library was tested on an Arduino Leonardo.
+The library was tested on an Arduino Leonardo and works on an Intel Galileo board, too (thanks spaniakos).
 
 
 Usage
