@@ -16,6 +16,40 @@ Usage
 It is possible to encrypt and decrypt messages with the DES or Triples DES crypto algorithms.
 Have a look at the example code for more information.
 
+### Raspberry  pi
+install
+```
+sudo make install
+cd examples_Rpi
+make
+```
+
+What to do after changes to the library
+```
+sudo make clean
+sudo make install
+cd examples_Rpi
+make clean
+make
+```
+
+What to do after changes to a sketch
+```
+cd examples_Rpi
+make <sketch>
+
+or 
+make clean
+make
+```
+
+How to start a sketch
+```
+cd examples_Rpi
+sudo ./<sketch>
+```
+
+
 
 License
 =======
