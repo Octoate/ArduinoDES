@@ -1,15 +1,4 @@
-#include "Arduino.h"
 #include "DES.h"
-
-#include <stdint.h>
-#include <string.h>
-#if !defined(__ARDUINO_X86__)
-	#include <avr/pgmspace.h>
-#else
-	#undef PROGMEM
-	#define PROGMEM __attribute__(( section(".progmem.data") ))
-	#define pgm_read_byte(p) (*(p))
-#endif
 
 const uint8_t sbox[256] PROGMEM = {
   /* S-box 1 */

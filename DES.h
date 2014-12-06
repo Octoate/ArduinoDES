@@ -31,7 +31,31 @@
 #ifndef DES_h
 #define DES_h
 
-#include "Arduino.h"
+#if  (defined(__linux) || defined(linux)) && !defined(__ARDUINO_X86__)
+
+  #define RF24_LINUX
+  
+  #include <stdint.h>
+  #include <stdio.h>
+  #include <stdlib.h>
+  #include <string.h>
+  #include <sys/time.h>
+  #include <unistd.h> 
+#else
+  #include <Arduino.h>
+#endif
+#include "DES.h"
+
+#include <stdint.h>
+#include <string.h>
+#if defined(__ARDUINO_X86__) || (defined (__linux) || defined (linux))
+	#undef PROGMEM
+	#define PROGMEM __attribute__(( section(".progmem.data") ))
+	#define pgm_read_byte(p) (*(p))
+	typedef unsigned char byte;
+#else
+	#include <avr/pgmspace.h>
+#endif
 
 /* the FIPS 46-3 (1999-10-25) name for triple DES is triple data encryption algorithm so TDEA.
  * Also we only implement the three key mode  */
