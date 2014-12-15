@@ -27,8 +27,8 @@ void loop() {
   des.tdesCbcDecipher(cyphertext,plaintext_p);
   bool ok = des.CheckPad(plaintext_p,sizeof(plaintext_p));
   if (ok)
-    printf("padding ok!");
+    printf("padding ok!\n");
   else
-    printf("padding corrupted!"); 
+    printf("padding corrupted!\n"); 
   delay(2000);
 }
