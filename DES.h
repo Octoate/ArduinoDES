@@ -31,31 +31,7 @@
 #ifndef DES_h
 #define DES_h
 
-#if  (defined(__linux) || defined(linux)) && !defined(__ARDUINO_X86__)
-
-  #define RF24_LINUX
-  
-  #include <stdint.h>
-  #include <stdio.h>
-  #include <stdlib.h>
-  #include <string.h>
-  #include <sys/time.h>
-  #include <unistd.h> 
-#else
-  #include <Arduino.h>
-#endif
-#include "DES.h"
-
-#include <stdint.h>
-#include <string.h>
-#if defined(__ARDUINO_X86__) || (defined (__linux) || defined (linux))
-	#undef PROGMEM
-	#define PROGMEM __attribute__(( section(".progmem.data") ))
-	#define pgm_read_byte(p) (*(p))
-	typedef unsigned char byte;
-#else
-	#include <avr/pgmspace.h>
-#endif
+#include "DES_config.h"
 
 /* the FIPS 46-3 (1999-10-25) name for triple DES is triple data encryption algorithm so TDEA.
  * Also we only implement the three key mode  */
@@ -129,6 +105,141 @@ class DES
 		*/
 		void tripleDecrypt(void* out, void* in, const uint8_t* key);
 		
+		/** \fn DES()
+		* \brief DES constructor
+		* 
+		* This function initialized an instance of DES
+		*/
+		DES();
+		
+		/** \fn void init(const void* m_key,unsigned long long int IVCl)
+		* \brief initiallize the key and IVC and IV array
+		* 
+		* This function initialized the basic variables needed for 3DES
+		* 
+		* \param m_key (64 bit = 8 byte)
+		* \param IVC int or hex value of iv , ex. 0x0000000000000001
+		*/
+		void init(const void* m_key,unsigned long long int IVCl);
+		
+		/** \fn void init(const void* m_key)
+		* \brief initiallize the key
+		* 
+		* This function initialized the basic variables needed for DES
+		* 
+		* \param m_key (64 bit = 8 byte)
+		*/
+		void init(const void* m_key);
+		
+		/** \fn void change_key(const char* m_key);
+		* \brief change the key for DEs and 3DES
+		* 
+		* This function changes the key variable needed for DES
+		* 
+		* \param m_key (64 bit = 8 byte)
+		*/
+		void change_key(const void* m_key);
+		
+		/** \fn void change_IV(unsigned long long int IVCl);
+		* \brief Change IVC and iv
+		* 
+		* This function changes the ivc and iv variables needed for 3DES
+		* 
+		* \param IVC int or hex value of iv , ex. 0x0000000000000001
+		*/
+		void change_IV(unsigned long long int IVCl);
+		
+		/** \fn voiv_inc()
+		* \brief inrease the IVC and iv but 1
+		* 
+		* This function increased the VI by one step in order to have a different IV each time
+		* 
+		*/
+		void iv_inc();
+		
+		/** \fn get_key()
+		* \brief getter method for key
+		* 
+		* This function return the key
+		* 
+		*/
+		byte* get_key();
+		
+		/** \fn get_size()
+		* \brief getter method for size
+		* 
+		* This function return the size
+		* 
+		*/
+		int get_size();
+		
+		/** \fn calc_size_n_pad(uint8_t p_size)
+		* \brief calculates the size of the plaintext and the padding
+		* 
+		* calculates the size of theplaintext with the padding
+		* and the size of the padding needed. Moreover it stores them in their variables.
+		* 
+		* \param m_plaintext the string of the plaintext in a byte array
+		* \param p_size the size of the byte array ex sizeof(plaintext)
+		*/
+		void calc_size_n_pad(int p_size);
+		
+		/** \fn padPlaintext(void* in,byte* out)
+		* \brief pads the plaintext
+		* 
+		* This function pads the plaintext and returns an char array with the 
+		* plaintext and the padding in order for the plaintext to be compatible with 
+		* 8bit size blocks required by 3DES
+		* 
+		* \param in the string of the plaintext in a byte array
+		*/
+		void padPlaintext(void* in,byte* out);
+		
+		/** \fn CheckPad(void* in,int size)
+		* \brief check the if the padding is correct
+		* 
+		* This functions checks the padding of the plaintext.
+		* 
+		* \param in the string of the plaintext in a byte array
+		* \param the size of the string
+		* \return true if correct / false if not
+		*/
+		bool CheckPad(byte* in,int size);
+		
+		/** \fn tdesCbcEncipher(byte* in,byte* out)
+		* \brief the main encrypt 3DES with IV function
+		* 
+		* This function uses the IV to xor (^) the first block of the string
+		* and encrypts it using tripleEncrypt function 
+		* 
+		* \param in the string of the plaintext in a byte array
+		*/
+		void tdesCbcEncipher(byte* in,byte* out);
+		
+		/** \fn tdesCbcDecipher(byte* in,byte* out)
+		* \brief the main decrypt 3DES with IV function
+		* 
+		* This function if the reverse of the tdesCbcEncipher function.
+		* used the IV and then the tripleDecrypt
+		* 
+		* \param in the string of the plaintext in a byte array
+		*/
+		void tdesCbcDecipher(byte* in,byte* out);
+		
+		/** \fn tprintArray(byte output[],bool p_pad = false)
+		* \brief Prints the array given
+		* 
+		* This function prints the given array with size equal \var size
+		* and pad equal \var pad. It is mainlly used for debugging purpuses or to output the string.
+		* 
+		* \param output the string of the plaintext in a byte array
+		* \param p_pad optional, used to print with out the padding characters
+		*/
+		void printArray(byte output[],bool p_pad = false);
+		void printArray(byte output[],int sizel);
+		#if defined(DES_LINUX)
+			unsigned long millis();
+		#endif
 	private:
 		void permute(const uint8_t *ptable, const uint8_t *in, uint8_t *out);
 		void changeendian32(uint32_t * a);
@@ -137,7 +248,17 @@ class DES
 		inline uint64_t splitin6bitwords(uint64_t a);
 		inline uint8_t substitute(uint8_t a, uint8_t * sbp);
 		uint32_t des_f(uint32_t r, uint8_t* kr);
-		
+		byte key[24];
+		unsigned long long int IVC;
+		byte iv[8];
+		int pad;
+		int size;
+		#if defined(DES_LINUX)
+			timeval tv;
+			byte arr_pad[7];
+		#else
+			byte arr_pad[7] = { 0x01,0x02,0x03,0x04,0x05,0x06,0x07 };
+		#endif
 };
 
 #endif

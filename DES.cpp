@@ -173,6 +173,49 @@ const uint8_t shiftkeyinv_permtab[] PROGMEM = {
 #define ROTTABLE      0x7EFC 
 #define ROTTABLE_INV  0x3F7E
 /******************************************************************************/
+DES::DES(){
+	sprintf((char *)key,"000000000000000000000000\0");
+	byte ar_iv[8] = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x01 };
+	memcpy(iv,ar_iv,8);
+	memcpy(&IVC,ar_iv,8);
+ 	arr_pad[0] = 0x01;
+	arr_pad[1] = 0x02;
+	arr_pad[2] = 0x03;
+	arr_pad[3] = 0x04;
+	arr_pad[4] = 0x05;
+	arr_pad[5] = 0x06;
+	arr_pad[6] = 0x07;
+}
+
+/*****************************************************************************/
+
+void DES::init(const void* m_key,unsigned long long int IVCl){
+	sprintf((char *)key,"%s",m_key);
+	memcpy(iv,&IVCl,8);
+	IVC = IVCl;
+}
+
+/*****************************************************************************/
+
+void DES::init(const void* m_key){
+	sprintf((char *)key,"%s",m_key);
+}
+
+/*****************************************************************************/
+
+void DES::change_key(const void* m_key){
+	sprintf((char *)key,"000000000000000000000000\0");
+	sprintf((char *)key,"%s",m_key);
+}
+
+/*****************************************************************************/
+
+void DES::change_IV(unsigned long long int IVCl){
+	memcpy(iv,&IVCl,8);
+	IVC = IVCl;
+}
+
+/*****************************************************************************/
 
 void DES::permute(const uint8_t *ptable, const uint8_t *in, uint8_t *out){
         uint8_t ob; /* in-bytes and out-bytes */
@@ -354,3 +397,168 @@ void DES::tripleDecrypt(void* out, void* in, const uint8_t* key){
 }
 
 /******************************************************************************/
+
+void DES::iv_inc(){
+	IVC += 1;
+	memcpy(iv,&IVC,8);
+}
+/******************************************************************************/
+
+byte* DES::get_key(){
+	return key;
+}
+
+/******************************************************************************/
+
+int DES::get_size(){
+	return size;
+}
+
+/******************************************************************************/
+
+void DES::calc_size_n_pad(int p_size){
+	int s_of_p = p_size - 1;
+	if ( s_of_p % 8 == 0){
+      size = s_of_p;
+	}else{
+		size = s_of_p +  (8-(s_of_p % 8));
+	}
+	pad = size - s_of_p;
+}		
+
+/******************************************************************************/
+
+void DES::padPlaintext(void* in,byte* out)
+{
+	memcpy(out,in,size);
+	for (int i = size-pad; i < size; i++){;
+		out[i] = arr_pad[pad - 1];
+	}
+}
+
+/******************************************************************************/
+
+bool DES::CheckPad(byte* in,int lsize){
+	if (in[lsize-1] <= 0x08){	
+		int lpad = (int)in[lsize-1];
+		for (int i = lsize - 1; i >= lsize-lpad; i--){
+			if (arr_pad[lpad - 1] != in[i]){
+				return false;
+			}
+		}
+	}else{
+		return true;
+	}
+return true;
+}
+/******************************************************************************/
+
+void DES::tdesCbcEncipher(byte* in,byte* out)
+{
+  #if defined(DES_PRINT)
+	printf_P(PSTR("\n"));
+	printf_P(PSTR("====== Triple-DES CBC encipher test ======\n"));
+	printf_P(PSTR("Encrypt..."));
+	unsigned long time = millis();
+  #endif
+  for (uint8_t i = 0; i < size; i += 8)
+  {
+    //CBC algorithm
+    //IMPORTANT: THIS WILL MODIFY THE INPUT ARRAY!!!
+    for (uint8_t xorIdx = 0; xorIdx < 8; xorIdx++)
+    {
+      // 0 -> use IV; >0 -> use ciphertext
+      if (i == 0)
+      {
+        in[i + xorIdx] = in[i + xorIdx] ^ iv[xorIdx];
+      }
+      else
+      {
+        in[i + xorIdx] = in[i + xorIdx] ^ out[(i - 8) + xorIdx];
+      }
+    }
+    
+    tripleEncrypt(out + i, in + i, key);
+  }
+  #if defined(DES_PRINT)
+	time = millis() - time;
+	printf_P(PSTR("done. ("));
+	printf_P(PSTR("%lu"),time);
+	printf_P(PSTR(" ms)\n"));
+	printArray(out);
+  #endif
+}
+
+/******************************************************************************/
+
+void DES::tdesCbcDecipher(byte* in,byte* out)
+{
+  #if defined(DES_PRINT)
+	printf_P(PSTR("\n"));
+	printf_P(PSTR("====== Triple-DES CBC decipher test ======\n"));
+	printf_P(PSTR("Decrypt..."));
+	unsigned long time = millis();
+
+  #endif
+  for (uint8_t i = 0; i < size; i += 8)
+  {
+    tripleDecrypt(out + i, in + i, key);
+    
+    //CBC algorithm
+    for (uint8_t xorIdx = 0; xorIdx < 8; xorIdx++)
+    {
+      // 0 -> use IV; >0 -> use ciphertext
+      if (i == 0)
+      {
+        out[i + xorIdx] = out[i + xorIdx] ^ iv[xorIdx];
+      }
+      else
+      {
+        out[i + xorIdx] = out[i + xorIdx] ^ in[(i - 8) + xorIdx];
+      }
+    }
+  }
+  #if defined(DES_PRINT)
+	time = millis() - time;
+	printf_P(PSTR("done. ("));
+	printf_P(PSTR("%lu"),time);
+	printf_P(PSTR(" ms)\n"));
+	printArray((byte*)out,(bool)true);
+  #endif
+}
+
+/******************************************************************************/
+
+void DES::printArray(byte output[],bool p_pad)
+{
+uint8_t i,j;
+uint8_t loops = size/8;
+uint8_t outp = 8;
+for (j = 0; j < loops; j += 1){
+  if (p_pad && (j == (loops  - 1)) ) { outp = 8 - pad; }
+  for (i = 0; i < outp; i++)
+  {
+    printf_P(PSTR("%c"),output[j*8 + i]);
+  }
+}
+  printf_P(PSTR("\n"));
+}
+
+/******************************************************************************/
+
+void DES::printArray(byte output[],int sizel)
+{
+  for (int i = 0; i < sizel; i++)
+  {
+    printf_P(PSTR("%x"),output[i]);
+  }
+  printf_P(PSTR("\n"));
+}
+
+/******************************************************************************/
+#if defined(DES_LINUX)
+unsigned long DES::millis(){
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec + 0.000001 * tv.tv_usec);
+}
+#endif
