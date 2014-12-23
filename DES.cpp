@@ -461,7 +461,7 @@ void DES::tdesCbcEncipher(byte* in,byte* out)
 	printf_P(PSTR("Encrypt..."));
 	unsigned long time = millis();
   #endif
-  for (uint8_t i = 0; i < size; i += 8)
+  for (int i = 0; i < size; i += 8)
   {
     //CBC algorithm
     //IMPORTANT: THIS WILL MODIFY THE INPUT ARRAY!!!
@@ -500,7 +500,7 @@ void DES::tdesCbcDecipher(byte* in,byte* out)
 	unsigned long time = millis();
 
   #endif
-  for (uint8_t i = 0; i < size; i += 8)
+  for (int i = 0; i < size; i += 8)
   {
     tripleDecrypt(out + i, in + i, key);
     
