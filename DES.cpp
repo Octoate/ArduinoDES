@@ -459,7 +459,6 @@ void DES::tdesCbcEncipher(byte* in,byte* out)
 	printf_P(PSTR("\n"));
 	printf_P(PSTR("====== Triple-DES CBC encipher test ======\n"));
 	printf_P(PSTR("Encrypt..."));
-	unsigned long time = millis();
   #endif
   for (int i = 0; i < size; i += 8)
   {
@@ -481,10 +480,6 @@ void DES::tdesCbcEncipher(byte* in,byte* out)
     tripleEncrypt(out + i, in + i, key);
   }
   #if defined(DES_PRINT)
-	time = millis() - time;
-	printf_P(PSTR("done. ("));
-	printf_P(PSTR("%lu"),time);
-	printf_P(PSTR(" ms)\n"));
 	printArray(out);
   #endif
 }
@@ -497,8 +492,6 @@ void DES::tdesCbcDecipher(byte* in,byte* out)
 	printf_P(PSTR("\n"));
 	printf_P(PSTR("====== Triple-DES CBC decipher test ======\n"));
 	printf_P(PSTR("Decrypt..."));
-	unsigned long time = millis();
-
   #endif
   for (int i = 0; i < size; i += 8)
   {
@@ -519,10 +512,6 @@ void DES::tdesCbcDecipher(byte* in,byte* out)
     }
   }
   #if defined(DES_PRINT)
-	time = millis() - time;
-	printf_P(PSTR("done. ("));
-	printf_P(PSTR("%lu"),time);
-	printf_P(PSTR(" ms)\n"));
 	printArray((byte*)out,(bool)true);
   #endif
 }
@@ -557,7 +546,7 @@ void DES::printArray(byte output[],int sizel)
 
 /******************************************************************************/
 #if defined(DES_LINUX)
-unsigned long DES::millis(){
+double DES::millis(){
 	gettimeofday(&tv, NULL);
 	return (tv.tv_sec + 0.000001 * tv.tv_usec);
 }

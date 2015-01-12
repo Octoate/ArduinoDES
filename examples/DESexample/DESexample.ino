@@ -24,12 +24,12 @@ void desTest()
   
   //encrypt
   Serial.print("Encrypt...");
-  long time = millis();
+  unsigned long time = micros();
   des.encrypt(out, in, key);
-  time = millis() - time;
+  time = micros() - time;
   Serial.print("done. (");
   Serial.print(time);
-  Serial.println(" ms)");
+  Serial.println(" micros)");
   printArray(out);
   
   //decrypt
@@ -38,12 +38,12 @@ void desTest()
     in[i] = out[i];
   }
   Serial.print("Decrypt...");
-  time = millis();
+  time = micros();
   des.decrypt(out, in, key);
-  time = millis() - time;
+  time = micros() - time;
   Serial.print("done. (");
   Serial.print(time);
-  Serial.println(" ms)");
+  Serial.println(" micros)");
   printArray(out);
 }
 
@@ -62,12 +62,12 @@ void tdesTest()
   
   //encrypt
   Serial.print("Encrypt...");
-  long time = millis();
+  unsigned long time = micros();
   des.tripleEncrypt(out, in, key);
-  time = millis() - time;
+  time = micros() - time;
   Serial.print("done. (");
   Serial.print(time);
-  Serial.println(" ms)");
+  Serial.println(" micros)");
   printArray(out);
   
   //decrypt
@@ -76,12 +76,12 @@ void tdesTest()
     in[i] = out[i];
   }
   Serial.print("Decrypt...");
-  time = millis();
+  time = micros();
   des.tripleDecrypt(out, in, key);
-  time = millis() - time;
+  time = micros() - time;
   Serial.print("done. (");
   Serial.print(time);
-  Serial.println(" ms)");
+  Serial.println(" micros)");
   printArray(out);
 }
 

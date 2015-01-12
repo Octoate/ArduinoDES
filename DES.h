@@ -238,7 +238,7 @@ class DES
 		void printArray(byte output[],bool p_pad = false);
 		void printArray(byte output[],int sizel);
 		#if defined(DES_LINUX)
-			unsigned long millis();
+			double millis();
 		#endif
 	private:
 		void permute(const uint8_t *ptable, const uint8_t *in, uint8_t *out);
