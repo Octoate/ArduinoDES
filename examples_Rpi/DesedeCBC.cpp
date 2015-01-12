@@ -27,6 +27,6 @@ int main(int argc, char** argv) {
     printf("padding ok!");
   else
     printf("padding corrupted!"); 
-  printf(" Decryption took %f ms",(des.millis() - ms));
+  printf(" Decryption took %f ms\n",(des.millis() - ms));
   return 0;
 }
