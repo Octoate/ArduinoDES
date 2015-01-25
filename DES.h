@@ -20,12 +20,9 @@
 	along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 /**
- * \file     des.c
- * \author   Daniel Otte
- * \email    daniel.otte@rub.de
- * \date     2007-06-16
- * \brief    DES and EDE-DES implementation
- * \license      GPLv3 or later
+ * @file DES.h
+ *
+ * Class declaration for DES / 3DES and helper enums
  */
 
 #ifndef DES_h
@@ -36,13 +33,6 @@
 /* the FIPS 46-3 (1999-10-25) name for triple DES is triple data encryption algorithm so TDEA.
  * Also we only implement the three key mode  */
 
-/** \def tdea_enc
- * \brief defining an alias for void tdes_enc(void* out, const void* in, const void* key)
- */
-
-/** \def tdea_dec
- * \brief defining an alias for void tdes_dec(void* out, const void* in, const void* key)
- */
 #define tdea_enc tdes_enc
 #define tdea_dec tdes_dec
 
@@ -118,7 +108,7 @@ class DES
 		* This function initialized the basic variables needed for 3DES
 		* 
 		* \param m_key (64 bit = 8 byte)
-		* \param IVC int or hex value of iv , ex. 0x0000000000000001
+		* \param IVCl int or hex value of iv , ex. 0x0000000000000001
 		*/
 		void init(const void* m_key,unsigned long long int IVCl);
 		
@@ -145,7 +135,7 @@ class DES
 		* 
 		* This function changes the ivc and iv variables needed for 3DES
 		* 
-		* \param IVC int or hex value of iv , ex. 0x0000000000000001
+		* \param IVCl int or hex value of iv , ex. 0x0000000000000001
 		*/
 		void change_IV(unsigned long long int IVCl);
 		
@@ -161,7 +151,8 @@ class DES
 		* \brief getter method for key
 		* 
 		* This function return the key
-		* 
+		* @return returns the key
+		
 		*/
 		byte* get_key();
 		
@@ -169,7 +160,8 @@ class DES
 		* \brief getter method for size
 		* 
 		* This function return the size
-		* 
+		* @return returns the size
+		
 		*/
 		int get_size();
 		
@@ -179,7 +171,6 @@ class DES
 		* calculates the size of theplaintext with the padding
 		* and the size of the padding needed. Moreover it stores them in their variables.
 		* 
-		* \param m_plaintext the string of the plaintext in a byte array
 		* \param p_size the size of the byte array ex sizeof(plaintext)
 		*/
 		void calc_size_n_pad(int p_size);
@@ -192,6 +183,7 @@ class DES
 		* 8bit size blocks required by 3DES
 		* 
 		* \param in the string of the plaintext in a byte array
+		* \param out the string of the padded plaintext in a byte array
 		*/
 		void padPlaintext(void* in,byte* out);
 		
@@ -200,8 +192,8 @@ class DES
 		* 
 		* This functions checks the padding of the plaintext.
 		* 
-		* \param in the string of the plaintext in a byte array
-		* \param the size of the string
+		* \param *in the string of the plaintext in a byte array
+		* \param size the size of the string
 		* \return true if correct / false if not
 		*/
 		bool CheckPad(byte* in,int size);
@@ -213,6 +205,7 @@ class DES
 		* and encrypts it using tripleEncrypt function 
 		* 
 		* \param in the string of the plaintext in a byte array
+		* \param out the string of the ciphertext in a byte array
 		*/
 		void tdesCbcEncipher(byte* in,byte* out);
 		
@@ -222,7 +215,8 @@ class DES
 		* This function if the reverse of the tdesCbcEncipher function.
 		* used the IV and then the tripleDecrypt
 		* 
-		* \param in the string of the plaintext in a byte array
+		* \param in the string of the ciphertext in a byte array
+		* \param out the string of the plaintext in a byte array
 		*/
 		void tdesCbcDecipher(byte* in,byte* out);
 		
@@ -236,29 +230,155 @@ class DES
 		* \param p_pad optional, used to print with out the padding characters
 		*/
 		void printArray(byte output[],bool p_pad = false);
+		
+		/** Prints the array given.
+		 * 
+		 * This function prints the given array in Hexadecimal.
+		 * 
+		 * @param output[] the string of the text in a byte array
+		 * @param sizel the size of the array.
+	*/
 		void printArray(byte output[],int sizel);
 		#if defined(DES_LINUX)
+			/**
+			 * used in linux in order to retrieve the time in milliseconds.
+			 *
+			 * @return returns the milliseconds in a double format.
+			 */
 			double millis();
 		#endif
 	private:
+		/** Permutation for DES.
+		 * @param *ptable the permutaion table to be used.
+		 * @param *in the pointer that holds the data before the permutations.
+		 * @param *out the pointer that holds the data after the permutation.
+		 * @return none, the output is inside the out pointer
+		 *
+		 */
 		void permute(const uint8_t *ptable, const uint8_t *in, uint8_t *out);
+		
+		/** change endian form.
+		 *  @param *a the byte to change endian
+		 */
 		void changeendian32(uint32_t * a);
+		
+		/** used to shift the key.
+		 * Used the shiftkey_permtab permutation table.
+		 * @param *key the key to be shifted.
+		 *
+		 */
 		inline void shiftkey(uint8_t *key);
+		
+		/** used to shift the key back.
+		 * Used the shiftkeyinv_permtab permutation table.
+		 * @param *key the key to be shifted.
+		 *
+		 */
 		inline void shiftkey_inv(uint8_t *key);
+		
+		/** splits in 6 bit words
+		 * 
+		 *  @param a uint64_t size that will be slitted, permuted and returned.
+		 *  @return the permuted a.
+		 *
+		 */
 		inline uint64_t splitin6bitwords(uint64_t a);
+		
+		/** main function for the substitutions
+		 *  @param a array position
+		 *  @param *sbp array to read byte from
+		 *  @returns the substituted byte.
+		 *
+		 */
 		inline uint8_t substitute(uint8_t a, uint8_t * sbp);
+		
+		/** Primary function of DES.
+		 *  Used in encryption and decryption process.
+		 *
+		 *  @param r unsigned intefer 32 bit, Data to be permuted.
+		 *  @param kr pointer of unsigned integers 8 bit, Data to be XOR with r after permutation
+		 *  @return
+		 *
+		 */
 		uint32_t des_f(uint32_t r, uint8_t* kr);
-		byte key[24];
-		unsigned long long int IVC;
-		byte iv[8];
-		int pad;
-		int size;
+		byte key[24];/**< holds the key for the encryption */
+		unsigned long long int IVC;/**< holds the initialization vector counter in numerical format. */
+		byte iv[8];/**< holds the initialization vector that will be used in the cipher. */
+		int pad;/**< holds the size of the padding. */
+		int size;/**< hold the size of the plaintext to be ciphered */
 		#if defined(DES_LINUX)
-			timeval tv;
-			byte arr_pad[7];
+			timeval tv;/**< holds the time value on linux */
+			byte arr_pad[7];/**< holds the hexadecimal padding values on linux */
 		#else
-			byte arr_pad[7] = { 0x01,0x02,0x03,0x04,0x05,0x06,0x07 };
+			byte arr_pad[7] = { 0x01,0x02,0x03,0x04,0x05,0x06,0x07 };/**< holds the hexadecimal padding values */
 		#endif
 };
 
 #endif
+
+/**
+ * @mainpage DES library for Arduino and Raspberry pi.
+ *
+ * @section Goals Design Goals
+ *
+ * This library is designed to be...
+ * @li Fast and efficient.
+ * @li Able to effectively encrypt and decrypt any size of string.
+ * @li Able to encrypt and decrypt using DES and 3DES.
+ * @li Easy for the user to use in his programs.
+ *
+ * @section Acknowledgements Acknowledgements
+ * This is an DES library for the Arduino, based on tzikis's DES library, which you can find <a href= "https://github.com/tzikis/arduino">here:</a>.<br />
+ * Tzikis library was based on scottmac`s library, which you can find <a href="https://github.com/scottmac/arduino">here:</a><br /> 
+ * 
+ * @section Installation Installation
+ * <h3>Arduino</h3>
+ * Create a folder named _DES_ in the _libraries_ folder inside your Arduino sketch folder. If the 
+ * libraries folder doesn't exist, create it. Then copy everything inside. (re)launch the Arduino IDE.<br />
+ * You're done. Time for a mojito
+ * 
+ * <h3>Raspberry  pi</h3>
+ * <b>install</b><br /><br />
+ * 
+ * sudo make install<br />
+ * cd examples_Rpi<br />
+ * make<br /><br />
+ * 
+ * <b>What to do after changes to the library</b><br /><br />
+ * sudo make clean<br />
+ * sudo make install<br />
+ * cd examples_Rpi<br />
+ * make clean<br />
+ * make<br /><br />
+ * <b>What to do after changes to a sketch</b><br /><br />
+ * cd examples_Rpi<br />
+ * make <sketch><br /><br />
+ * or <br />
+ * make clean<br />
+ * make<br /><br /><br />
+ * <b>How to start a sketch</b><br /><br />
+ * cd examples_Rpi<br />
+ * sudo ./<sketch><br /><br />
+ * 
+ * @section News News
+ *
+ * If issues are discovered with the documentation, please report them <a href="https://github.com/spaniakos/spaniakos.github.io/issues"> here</a>
+ * @section Useful Useful References
+ *
+ * Please refer to:
+ *
+ * @li <a href="http://spaniakos.github.io/ArduinoDES/classDES.html"><b>DES</b> Class Documentation</a>
+ * @li <a href="https://github.com/spaniakos/ArduinoDES/archive/master.zip"><b>Download</b></a>
+ * @li <a href="https://github.com/spaniakos/ArduinoDES/"><b>Source Code</b></a>
+ * @li <a href="http://spaniakos.github.io/">All spaniakos Documentation Main Page</a>
+ *
+ * @section Board_Support Board Support
+ *
+ * Most standard Arduino based boards are supported:
+ * - Arduino
+ * - Intel Galileo support
+ * - Raspberry Pi Support
+ * 
+ * - The library has not been tested to other boards, but it should suppport ATMega 328 based boards,Mega Boards,Arduino Due,ATTiny board
+ */
+
