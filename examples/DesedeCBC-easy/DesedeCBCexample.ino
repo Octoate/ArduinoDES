@@ -19,7 +19,7 @@ void setup() {
 void loop() {
   ms = micros();
   byte plaintext[] = "0123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890";
-  byte ciphertext[sizeof(plaintext) + (8 - (sizeof(plaintext) % 8)) - 1];
+  byte ciphertext[calc_size(sizeof(plaintext))];
   byte plaintext_p[sizeof(ciphertext)];
   des.do_3des_encrypt(plaintext,sizeof(plaintext),ciphertext,"012345677654321001234567\0");
   printf(" Encryption took %lu micros\n",(micros()  - ms));
@@ -28,4 +28,9 @@ void loop() {
   des.do_3des_decrypt(ciphertext,sizeof(ciphertext),plaintext_p,"012345677654321001234567\0", des.get_IV_int());
   printf(" Decryption took %lu micros",(micros() - ms));
   delay(2000);
+}
+
+int calc_size(int size){
+	size = size + (8 - (size % 8)) - 1;
+	return size;
 }

@@ -359,6 +359,69 @@ class DES
 };
 
 #endif
+/**
+ * @example DESexample.ino
+ * <b>For Arduino</b><br>
+ * <b>Updated: spaniakos 2015 </b><br>
+ *
+ * A simple example demonstrating the DES encyption decruption use using Hexadecimal values.
+ */
+ 
+ /**
+ * @example DESexample.cpp
+ * <b>For Rasberry pi</b><br>
+ * <b>Updated: spaniakos 2015 </b><br>
+ *
+ * A simple example demonstrating the DES encyption decruption use using Hexadecimal values.
+ */
+ 
+ /**
+ * @example DesedeCBCexample.ino
+ * <b>For Arduino</b><br>
+ * <b>Updated: spaniakos 2015 </b><br>
+ *
+ * This example dempnstrates how to implement: <br />
+ * <ul>
+ * <li>3des Encryption</li>
+ * <li>3des Decyption</li>
+ * <li>Padding check</li>
+ * </ul><br />
+ * Using all functions manually.
+ */
+ 
+ /**
+ * @example DesedeCBCexample.cpp
+ * <b>For Rasberry pi</b><br>
+ * <b>Updated: spaniakos 2015 </b><br>
+ *
+ * This example dempnstrates how to implement: <br />
+ * <ul>
+ * <li>3des Encryption</li>
+ * <li>3des Decyption</li>
+ * <li>Padding check</li>
+ * </ul><br />
+ * Using all f
+ 
+ /**
+ * @example DesedeCBC-easy.ino
+ * <b>For Arduino</b><br>
+ * <b>Updated: spaniakos 2015 </b><br>
+ *
+ * This Demonstrates the user friendly implementation.
+ * <b>NOTE:</b><br />
+ * calc_size Function calculates the size for the ciphertext.
+ */
+ 
+ /**
+ * @example DesedeCBC-easy.cpp
+ * <b>For Rasberry pi</b><br>
+ * <b>Updated: spaniakos 2015 </b><br>
+ *
+ * This Demonstrates the user friendly implementation.
+ * <b>NOTE:</b><br />
+ * calc_size Function calculates the size for the ciphertext.
+ */
+
 
 /**
  * @mainpage DES library for Arduino and Raspberry pi.
