@@ -283,7 +283,7 @@ class DES
 		* @param ivl the initialization vector IV that will be used for decryption.
 		* @note The key will be stored in class variable.
 		*/
-	void do_3des_dencrypt(byte *cipher,int size_c,byte *plain,const void *key, unsigned long long int ivl);
+	void do_3des_decrypt(byte *cipher,int size_c,byte *plain,const void *key, unsigned long long int ivl);
 		#if defined(DES_LINUX)
 			/**
 			 * used in linux in order to retrieve the time in milliseconds.

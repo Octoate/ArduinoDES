@@ -223,7 +223,7 @@ void DES::get_IV(byte *out){
 
 /******************************************************************************/
 
-unsigned long long int get_IV_int(){
+unsigned long long int DES::get_IV_int(){
 	return IVC;
 }
 
@@ -576,7 +576,7 @@ void DES::do_3des_encrypt(byte *plain,int size_p,byte *cipher,const void *key){
 
 /******************************************************************************/
 
-void DES::do_3des_dencrypt(byte *cipher,int size_c,byte *plain,const void *key, unsigned long long int ivl){
+void DES::do_3des_decrypt(byte *cipher,int size_c,byte *plain,const void *key, unsigned long long int ivl){
 	size = size_c;
 	change_key (key);
 	set_IV(ivl);
