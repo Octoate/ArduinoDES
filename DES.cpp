@@ -210,9 +210,21 @@ void DES::change_key(const void* m_key){
 
 /*****************************************************************************/
 
-void DES::change_IV(unsigned long long int IVCl){
+void DES::set_IV(unsigned long long int IVCl){
 	memcpy(iv,&IVCl,8);
 	IVC = IVCl;
+}
+
+/******************************************************************************/
+
+void DES::get_IV(byte *out){
+	memcpy(out,&IVC,8);
+}
+
+/******************************************************************************/
+
+unsigned long long int get_IV_int(){
+	return IVC;
 }
 
 /*****************************************************************************/
@@ -416,6 +428,13 @@ int DES::get_size(){
 
 /******************************************************************************/
 
+void DES::set_size(int sizel){
+	size = sizel;
+}
+
+
+/******************************************************************************/
+
 void DES::calc_size_n_pad(int p_size){
 	int s_of_p = p_size - 1;
 	if ( s_of_p % 8 == 0){
@@ -543,6 +562,27 @@ void DES::printArray(byte output[],int sizel)
   }
   printf_P(PSTR("\n"));
 }
+
+/******************************************************************************/
+
+void DES::do_3des_encrypt(byte *plain,int size_p,byte *cipher,const void *key){
+	iv_inc();
+	calc_size_n_pad(size_p);
+	byte plain_p[get_size()];
+	padPlaintext(plain,plain_p);
+	change_key (key);
+	tdesCbcEncipher(plain_p,cipher);
+}
+
+/******************************************************************************/
+
+void DES::do_3des_dencrypt(byte *cipher,int size_c,byte *plain,const void *key, unsigned long long int ivl){
+	size = size_c;
+	change_key (key);
+	set_IV(ivl);
+	tdesCbcDecipher(cipher,plain);
+}
+
 
 /******************************************************************************/
 #if defined(DES_LINUX)

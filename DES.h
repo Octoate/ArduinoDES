@@ -137,7 +137,23 @@ class DES
 		* 
 		* \param IVCl int or hex value of iv , ex. 0x0000000000000001
 		*/
-		void change_IV(unsigned long long int IVCl);
+		void set_IV(unsigned long long int IVCl);
+		
+		/** Getter method for IV
+		 * 
+		 * This function return the IV
+		 * @param out byte pointer that gets the IV.
+		 * @return none, the IV is writed to the out pointer.
+		 */
+		void get_IV(byte *out);
+		
+		/** Getter method for IV
+		 * 
+		 * This function return the IV
+		 * @param out byte pointer that gets the IV.
+		 * @return none, the IV is writed to the out pointer.
+		 */
+		unsigned long long int get_IV_int();
 		
 		/** \fn voiv_inc()
 		* \brief inrease the IVC and iv but 1
@@ -164,6 +180,13 @@ class DES
 		
 		*/
 		int get_size();
+		
+		/** Setter method for size
+		 *
+		 * This function sets the size of the plaintext+pad
+		 * 
+		 */
+		 void set_size(int sizel);
 		
 		/** \fn calc_size_n_pad(uint8_t p_size)
 		* \brief calculates the size of the plaintext and the padding
@@ -220,7 +243,7 @@ class DES
 		*/
 		void tdesCbcDecipher(byte* in,byte* out);
 		
-		/** \fn tprintArray(byte output[],bool p_pad = false)
+		/** \fn tprintArray(byte output[],bool p_pad = true)
 		* \brief Prints the array given
 		* 
 		* This function prints the given array with size equal \var size
@@ -229,7 +252,7 @@ class DES
 		* \param output the string of the plaintext in a byte array
 		* \param p_pad optional, used to print with out the padding characters
 		*/
-		void printArray(byte output[],bool p_pad = false);
+		void printArray(byte output[],bool p_pad = true);
 		
 		/** Prints the array given.
 		 * 
@@ -237,8 +260,30 @@ class DES
 		 * 
 		 * @param output[] the string of the text in a byte array
 		 * @param sizel the size of the array.
-	*/
+		 */
 		void printArray(byte output[],int sizel);
+		
+		/** User friendly implementation of AES-CBC encryption.
+		 * 
+	     * @param *plain pointer to the plaintext
+		 * @param size_p size of the plaintext
+		 * @param *cipher pointer to the ciphertext
+		 * @param *key pointer to the key that will be used.
+		 * @note The key will be stored in class variable.
+		 */
+		void do_3des_encrypt(byte *plain,int size_p,byte *cipher,const void *key);
+	
+		/** User friendly implementation of AES-CBC decryption.
+		* 
+		* @param *cipher pointer to the ciphertext
+		* @param size_c size of the ciphertext
+		* @param *plain pointer to the plaintext
+		* @param *key pointer to the key that will be used.
+		* @param bits bits of the encryption/decrpytion
+		* @param ivl the initialization vector IV that will be used for decryption.
+		* @note The key will be stored in class variable.
+		*/
+	void do_3des_dencrypt(byte *cipher,int size_c,byte *plain,const void *key, unsigned long long int ivl);
 		#if defined(DES_LINUX)
 			/**
 			 * used in linux in order to retrieve the time in milliseconds.
