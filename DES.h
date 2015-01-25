@@ -142,7 +142,7 @@ class DES
 		/** Getter method for IV
 		 * 
 		 * This function return the IV
-		 * @param out byte pointer that gets the IV.
+		 * @param *out byte pointer that gets the IV.
 		 * @return none, the IV is writed to the out pointer.
 		 */
 		void get_IV(byte *out);
@@ -279,7 +279,6 @@ class DES
 		* @param size_c size of the ciphertext
 		* @param *plain pointer to the plaintext
 		* @param *key pointer to the key that will be used.
-		* @param bits bits of the encryption/decrpytion
 		* @param ivl the initialization vector IV that will be used for decryption.
 		* @note The key will be stored in class variable.
 		*/
