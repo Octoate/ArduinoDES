@@ -1,6 +1,8 @@
 #include <DES.h>
 #include "printf.h"
 
+int calc_size(int size);
+
 DES des;
 double ms;
 
