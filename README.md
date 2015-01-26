@@ -1,3 +1,5 @@
+Please see the full documentation at http://spaniakos.github.io/ArduinoDES
+
 ArduinoDES
 ==========
 
