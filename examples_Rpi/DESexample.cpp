@@ -4,10 +4,8 @@
 void desTest();
 void tdesTest();
 void printArray(byte output[]);
-double millis();
 
 DES des;
-timeval tv;
 
 int main(int argc, char** argv) 
 {
@@ -29,9 +27,9 @@ void desTest()
   
   //encrypt
   printf("Encrypt...");
-  double time = millis();
+  double time = des.millis();
   des.encrypt(out, in, key);
-  time = millis() - time;
+  time = des.millis() - time;
   printf("done. (");
   printf("%f",time);
   printf(" ms)\n");
@@ -43,9 +41,9 @@ void desTest()
     in[i] = out[i];
   }
   printf("Decrypt...");
-  time = millis();
+  time = des.millis();
   des.decrypt(out, in, key);
-  time = millis() - time;
+  time = des.millis() - time;
   printf("done. (");
   printf("%f",time);
   printf(" ms)\n");
@@ -67,9 +65,9 @@ void tdesTest()
   
   //encrypt
   printf("Encrypt...");
-  double time = millis();
+  double time = des.millis();
   des.tripleEncrypt(out, in, key);
-  time = millis() - time;
+  time = des.millis() - time;
   printf("done. (");
   printf("%f",time);
   printf(" ms)\n");
@@ -81,9 +79,9 @@ void tdesTest()
     in[i] = out[i];
   }
   printf("Decrypt...");
-  time = millis();
+  time = des.millis();
   des.tripleDecrypt(out, in, key);
-  time = millis() - time;
+  time = des.millis() - time;
   printf("done. (");
   printf("%f",time);
   printf(" ms)\n");
@@ -102,9 +100,4 @@ void printArray(byte output[])
     printf(" ");
   }
   printf("\n");
-}
-
-double millis(){
-	gettimeofday(&tv, NULL);
-	return (tv.tv_sec + 0.000001 * tv.tv_usec);
 }

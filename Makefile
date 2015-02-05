@@ -42,6 +42,8 @@ DES.o: DES.cpp
 # clear build files
 clean:
 	rm -rf *.o ${LIB}.*
+	rm -rf ${LIBDIR}/${LIB}.*
+	rm -rf ${HEADER_DIR}
 
 install: all install-libs install-headers
 

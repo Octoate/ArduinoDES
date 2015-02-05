@@ -18,7 +18,7 @@ CCFLAGS=-Ofast -mfpu=vfp -mfloat-abi=hard -march=armv6zk -mtune=arm1176jzf-s
 #CCFLAGS=
 
 # define all programs
-PROGRAMS = DesedeCBC DESexample
+PROGRAMS = DesedeCBC DESexample DesedeCBC-easy
 SOURCES = ${PROGRAMS:=.cpp}
 
 all: ${PROGRAMS}
