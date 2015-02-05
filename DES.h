@@ -352,10 +352,9 @@ class DES
 		int size;/**< hold the size of the plaintext to be ciphered */
 		#if defined(DES_LINUX)
 			timeval tv;/**< holds the time value on linux */
-			byte arr_pad[7];/**< holds the hexadecimal padding values on linux */
-		#else
-			byte arr_pad[7] = { 0x01,0x02,0x03,0x04,0x05,0x06,0x07 };/**< holds the hexadecimal padding values */
 		#endif
+			
+		byte arr_pad[7];/**< holds the hexadecimal padding values, initialisation in the constructor */
 };
 
 #endif
