@@ -269,9 +269,10 @@ class DES
 		 * @param size_p size of the plaintext
 		 * @param *cipher pointer to the ciphertext
 		 * @param *key pointer to the key that will be used.
+		 * @param inc optional parameter to automaticaly increase IV
 		 * @note The key will be stored in class variable.
 		 */
-		void do_3des_encrypt(byte *plain,int size_p,byte *cipher,const void *key);
+		void do_3des_encrypt(byte *plain,int size_p,byte *cipher,const void *key, bool inc = false);
 	
 		/** User friendly implementation of AES-CBC decryption.
 		* 
