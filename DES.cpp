@@ -565,8 +565,10 @@ void DES::printArray(byte output[],int sizel)
 
 /******************************************************************************/
 
-void DES::do_3des_encrypt(byte *plain,int size_p,byte *cipher,const void *key){
-	iv_inc();
+void DES::do_3des_encrypt(byte *plain,int size_p,byte *cipher,const void *key, bool inc){
+	if (inc){
+		iv_inc();
+	}
 	calc_size_n_pad(size_p);
 	byte plain_p[get_size()];
 	padPlaintext(plain,plain_p);
