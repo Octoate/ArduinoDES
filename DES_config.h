@@ -30,8 +30,10 @@
 	typedef unsigned char byte;
 	#define printf_P printf
 	#define PSTR(x) (x)
-#else
+#elif defined(__AVR__) || defined(ARDUINO_ARCH_AVR)
 	#include <avr/pgmspace.h>
+#else
+	#include <pgmspace.h>
 #endif
 
 #endif
