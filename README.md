@@ -6,10 +6,26 @@ ArduinoDES
 DES and Triples DES encryption and decryption library for the Arduino microcontroller platform.
 This code was ported from the AVR-Crypto-Lib (http://www.das-labor.org/wiki/AVR-Crypto-Lib).
 
+Arduino IDE
+-----------
+
 To install the library, download and copy the files into a subfolder (e.g. "DES") in the 
 "libraries" folder of your Arduino development environment.
 
 The library was tested on an Arduino Leonardo and works on an Intel Galileo board, too (thanks spaniakos).
+
+
+PlatformIO
+----------
+
+To use this library in a PlatformIO project, add this repository's url to the list of `lib_deps` in `platformio.ini`.
+Make sure to use `framework = arduino`:
+
+```
+framework = arduino
+lib_deps =
+    https://github.com/Octoate/ArduinoDES.git
+```
 
 
 Usage
