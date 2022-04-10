@@ -1,0 +1,13 @@
+{
+    "name": "ArduinoDES",
+    "version": "1.0.0",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Octoate/ArduinoDES.git"
+    },
+    "frameworks": ["arduino"],
+    "platforms": "*",
+    "build": {
+        "srcFilter": ["+<*.cpp>", "+<*.h>"]
+    }
+}
